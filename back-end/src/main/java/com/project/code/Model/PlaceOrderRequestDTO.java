@@ -1,13 +1,13 @@
 package com.project.code.Model;
 
-
 import java.util.List;
 
 public class PlaceOrderRequestDTO {
+
     private Long storeId;
-    private String customerName;
-    private String customerEmail;
-    private String customerPhone;
+    private String name;
+    private String email;
+    private String phone;
     private String datetime;
     private List<PurchaseProductDTO> purchaseProduct;
     private Double totalPrice;
@@ -22,28 +22,28 @@ public class PlaceOrderRequestDTO {
         this.storeId = storeId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCustomerEmail() {
-        return customerEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getCustomerPhone() {
-        return customerPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getDatetime() {
