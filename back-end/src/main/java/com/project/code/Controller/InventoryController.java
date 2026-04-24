@@ -7,6 +7,7 @@ import com.project.code.Model.*;
 import com.project.code.Repo.*;
 import com.project.code.Service.ServiceClass;
 import com.project.code.Model.CombinedRequest;
+
 import java.util.*;
 
 @RestController
@@ -32,7 +33,6 @@ public class InventoryController {
             Product product = request.getProduct();
             Inventory inventory = request.getInventory();
 
-            // Validate product ID
             boolean isValid = serviceClass.ValidateProductId(product.getId());
 
             if (!isValid) {
@@ -84,12 +84,12 @@ public class InventoryController {
     }
 
     // ================= GET ALL PRODUCTS BY STORE =================
-    @GetMapping("/{storeid}")
-    public Map<String, Object> getAllProducts(@PathVariable Long storeid) {
+    @GetMapping("/{storeId}")
+    public Map<String, Object> getAllProducts(@PathVariable Long storeId) {
 
         Map<String, Object> response = new HashMap<>();
 
-        List<Product> products = productRepository.findProductsByStoreId(storeid);
+        List<Product> products = productRepository.findProductsByStoreId(storeId);
 
         response.put("products", products);
 
@@ -97,60 +97,28 @@ public class InventoryController {
     }
 
     // ================= FILTER PRODUCTS =================
-    @GetMapping("filter/{category}/{name}/{storeid}")
+    @GetMapping("/filter/{category}/{name}/{storeId}")
     public Map<String, Object> getProductName(@PathVariable String category,
                                               @PathVariable String name,
-                                              @PathVariable Long storeid) {
+                                              @PathVariable Long storeId) {
 
         Map<String, Object> response = new HashMap<>();
         List<Product> products;
 
         if (category.equals("null")) {
-            products = productRepository.findByNameLike(storeid, name);
+            products = productRepository.findByNameLike(storeId, name);
         } else if (name.equals("null")) {
-            products = productRepository.findByCategoryAndStoreId(storeid, category);
+            products = productRepository.findByCategoryAndStoreId(storeId, category);
         } else {
-            products = productRepository.findByNameAndCategory(storeid, name, category);
+            products = productRepository.findByNameAndCategory(storeId, name, category);
         }
 
-        response.put("product", products);
-        return response;
-    }
-
-    // ================= SEARCH PRODUCT =================
-    @GetMapping("search/{name}/{storeId}")
-    public Map<String, Object> searchProduct(@PathVariable String name,
-                                             @PathVariable Long storeId) {
-
-        Map<String, Object> response = new HashMap<>();
-
-        List<Product> products = productRepository.findByNameLike(storeId, name);
-
-        response.put("product", products);
-
-        return response;
-    }
-
-    // ================= DELETE PRODUCT =================
-    @DeleteMapping("/{id}")
-    public Map<String, String> removeProduct(@PathVariable Long id) {
-
-        Map<String, String> response = new HashMap<>();
-
-        boolean exists = serviceClass.ValidateProductId(id);
-
-        if (!exists) {
-            response.put("message", "Product not present in database");
-        } else {
-            inventoryRepository.deleteByProductId(id);
-            response.put("message", "Product deleted successfully");
-        }
-
+        response.put("products", products);
         return response;
     }
 
     // ================= VALIDATE QUANTITY =================
-    @GetMapping("validate/{quantity}/{storeId}/{productId}")
+    @GetMapping("/validate/{quantity}/{storeId}/{productId}")
     public boolean validateQuantity(@PathVariable Integer quantity,
                                     @PathVariable Long storeId,
                                     @PathVariable Long productId) {

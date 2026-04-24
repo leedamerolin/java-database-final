@@ -7,6 +7,7 @@ import com.project.code.Model.Store;
 import com.project.code.Repo.StoreRepository;
 import com.project.code.Service.OrderService;
 import com.project.code.Model.PlaceOrderRequestDTO;
+
 import java.util.*;
 
 @RestController
@@ -33,16 +34,16 @@ public class StoreController {
     }
 
     // ================= VALIDATE STORE =================
-    @GetMapping("validate/{storeId}")
-    public boolean validateStore(@PathVariable Long storeId) {
+    @GetMapping("/validate/store/{id}")
+    public boolean validateStore(@PathVariable Long id) {
 
-        Store store = storeRepository.findByid(storeId);
+        Store store = storeRepository.findByid(id);
 
         if (store != null) {
             return true;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     // ================= PLACE ORDER =================

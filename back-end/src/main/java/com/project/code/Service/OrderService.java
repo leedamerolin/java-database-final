@@ -7,6 +7,7 @@ import com.project.code.Repo.*;
 import com.project.code.Model.*;
 import com.project.code.Model.PlaceOrderRequestDTO;
 import com.project.code.Model.PurchaseProductDTO;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class OrderService {
 
         for (PurchaseProductDTO item : products) {
 
-            // Get inventory for product and store
+            // Get inventory
             Inventory inventory = inventoryRepository
                     .findByProductIdandStoreId(item.getProductId(), placeOrderRequest.getStoreId());
 
@@ -74,18 +75,27 @@ public class OrderService {
                 throw new RuntimeException("Inventory not found for product");
             }
 
-            // Update stock level
-            inventory.setStockLevel(inventory.getStockLevel() - item.getQuantity());
+            // ===== CLEAR STOCK REDUCTION (UPDATED PART) =====
+            Integer currentStock = inventory.getStockLevel();
+            Integer quantity = item.getQuantity();
+
+            Integer updatedStock = currentStock - quantity;
+
+            inventory.setStockLevel(updatedStock);
+
             inventoryRepository.save(inventory);
+            // ===============================================
 
             // Get product
-            Product product = productRepository.findById(item.getProductId()).orElse(null);
+            Product product = productRepository
+                    .findById(item.getProductId())
+                    .orElse(null);
 
             // Create OrderItem
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(orderDetails);
             orderItem.setProduct(product);
-            orderItem.setQuantity(item.getQuantity());
+            orderItem.setQuantity(quantity);
             orderItem.setPrice(item.getPrice());
 
             orderItemRepository.save(orderItem);

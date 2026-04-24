@@ -23,7 +23,6 @@ public class OrderDetails {
     // Many-to-One relationship with Store
     @ManyToOne
     @JoinColumn(name = "store_id")
-    @JsonManagedReference
     private Store store;
 
     // Total price of the order

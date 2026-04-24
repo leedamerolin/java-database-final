@@ -20,7 +20,20 @@ public class ReviewController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    // ================= GET REVIEWS =================
+    // ================= GET ALL REVIEWS =================
+    @GetMapping
+    public Map<String, Object> getAllReviews() {
+
+        Map<String, Object> response = new HashMap<>();
+
+        List<Review> reviews = reviewRepository.findAll();
+
+        response.put("reviews", reviews);
+
+        return response;
+    }
+
+    // ================= GET REVIEWS BY STORE & PRODUCT =================
     @GetMapping("/{storeId}/{productId}")
     public Map<String, Object> getReviews(@PathVariable Long storeId,
                                           @PathVariable Long productId) {
@@ -36,11 +49,9 @@ public class ReviewController {
 
             Map<String, Object> reviewData = new HashMap<>();
 
-            // Add required fields
             reviewData.put("comment", review.getComment());
             reviewData.put("rating", review.getRating());
 
-            // Fetch customer name
             Customer customer = customerRepository.findByid(review.getCustomerId());
 
             if (customer != null) {

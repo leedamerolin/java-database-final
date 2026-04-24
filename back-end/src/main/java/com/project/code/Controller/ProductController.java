@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     // ================= GET PRODUCT BY ID =================
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     public Map<String, Object> getProductbyId(@PathVariable Long id) {
 
         Map<String, Object> response = new HashMap<>();
@@ -133,8 +133,13 @@ public class ProductController {
         if (!exists) {
             response.put("message", "Product not present in database");
         } else {
+
+            // Delete inventory first
             inventoryRepository.deleteByProductId(id);
+
+            // Delete product
             productRepository.deleteById(id);
+
             response.put("message", "Product deleted successfully");
         }
 
